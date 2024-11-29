@@ -2,9 +2,8 @@ Medidas Power Bi
 
 Comparar Períodos iguales en años distintos
 Venta Mismo Periodo Año Anterior = 
-VAR MaxFechaVta = MAX(B_Ventas[Fecha]) 
-VAR FechaVenta = FILTER(DATESMTD(A_Calendario[Fecha]),A_Calendario[Fecha] <= MaxFechaVta)
-VAR FechasAnoAnterior = SAMEPERIODLASTYEAR(FechaVenta)
-VAR VentaAnoAnterior = CALCULATE('Medidas de Venta'[Venta Total],FechasAnoAnterior)
+VAR MaxFechaVta = CALCULATE(MAX(B_Ventas[Fecha]), MONTH(B_Ventas[Fecha]) <= MONTH(TODAY())) // Calcula la venta hasta el ultimo día del mes en curso, para excluir las ventas puestas a futuro
+VAR FechaVenta = FILTER(DATESMTD(A_Calendario[Fecha]),A_Calendario[Fecha] <= MaxFechaVta) //  Calcula una tabla de fechas donde se incluyan las fechas inferiores ala fecha maxima de venta
+VAR FechasAnoAnterior = SAMEPERIODLASTYEAR(FechaVenta) // Resta un año a las fechas
+VAR VentaAnoAnterior = CALCULATE('Medidas de Venta'[Venta Total],FechasAnoAnterior) // Calcula la venta de las fechas del periodo anterior
 RETURN VentaAnoAnterior
-
